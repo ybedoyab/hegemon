@@ -4,7 +4,7 @@ description: Adaptive software repair agent. Chooses the next action from eviden
 instruction: !include prompts/system.md
 generate_content_config: !include configs/sampling.yaml
 skills:
-  - skills/hegemon_repair
+  - skills/hegemon-repair
 tools:
   - run_command
   - read_file

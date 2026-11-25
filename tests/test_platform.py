@@ -75,7 +75,8 @@ def test_official_submission_shape() -> None:
     eval_config = (SUBMISSION / "eval_config.yaml").read_text(encoding="utf-8")
     sampling = (SUBMISSION / "configs" / "sampling.yaml").read_text(encoding="utf-8")
     assert "skills:" in agent
-    assert "skills/hegemon_repair" in agent
+    assert "skills/hegemon-repair" in agent
+    assert "hegemon_repair" not in agent
     assert "- name:" not in agent
     assert "evaluation:" in eval_config
     assert "max_tool_calls:" in eval_config

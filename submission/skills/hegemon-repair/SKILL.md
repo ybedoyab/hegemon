@@ -1,5 +1,5 @@
 ---
-name: hegemon_repair
+name: hegemon-repair
 description: Localize a Python bug from the issue text, record evidence, summarize one targeted test, and check the patch before submit_patch.
 ---
 

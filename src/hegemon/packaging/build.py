@@ -81,7 +81,7 @@ def validate_tree(root: Path) -> list[str]:
             if marker in text_sample:
                 errors.append(f"secret_marker:{relative}")
                 break
-    skill = root / "skills" / "hegemon_repair" / "SKILL.md"
+    skill = root / "skills" / "hegemon-repair" / "SKILL.md"
     if not skill.is_file():
         errors.append("missing_skill")
     return errors
