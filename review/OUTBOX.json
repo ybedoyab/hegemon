@@ -1,0 +1,19 @@
+{
+  "iteration": 1,
+  "date": "2026-11-25",
+  "repository": "https://github.com/ybedoyab/hegemon",
+  "visibility": "private",
+  "branch": "feat/hegemon-core",
+  "agent_commit": "11352bb13f2651249c5d04172e4c3ad3a69a59eb",
+  "pull_request": "https://github.com/ybedoyab/hegemon/pull/1",
+  "branch_head": "f59df4e079b3cfde79a12d3f16f943c8b0c5ac3d",
+  "remote_verified": true,
+  "requested_decision": "REQUEST_CHANGES",
+  "official_solve_rate": null,
+  "official_harness": "NOT_RUN",
+  "unit_tests_passed_locally": 17,
+  "synthetic_localization_top1": "2/2",
+  "zip_sha256": "6aef0dcb24d01a3e96aef5d56795c46e821ff88722b3abcdfa0bb276e017f5bd",
+  "chatgpt_conversation_opened": false,
+  "reason_conversation_not_opened": "The existing ChatGPT conversation URL was not provided. Browser history was not searched."
+}

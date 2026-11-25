@@ -1,0 +1,14 @@
+---
+description: HEGEMON mission, resume order, and evidence rules
+alwaysApply: true
+---
+
+# Mission
+
+HEGEMON is a competition software-repair agent for Kaggle `gemma-4-developer-agent`. Target a real public score of at least 0.24. Do not claim that score before Kaggle scores a submission. The user submits to Kaggle manually.
+
+On every resume: read `AGENTS.md`, `docs/PROJECT_STATE.md`, the newest file in `experiments/`, `review/INBOX.md` if present, then `git status` and `git rev-parse HEAD`. Continue the highest-priority unfinished task in `docs/BACKLOG.md`.
+
+Do not treat conversation memory as project state. Do not invent metrics, logs, or approvals. A component is functional only after a recorded test. Mock inference is not a solve rate.
+
+Official competition rules override this file when they conflict. Unknown harness features stay disabled.

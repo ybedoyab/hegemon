@@ -1,0 +1,29 @@
+# Limits used by the local packager and the budget command.
+# Official values are UNKNOWN until HARNESS_README.md is in data/official/.
+
+total_hours: 12
+assumed_hidden_tasks: 120
+assumed_public_tasks: 60
+zip_max_bytes: 3221225472
+context_tokens_reported: 32768
+per_task_minutes_shipped: 4
+max_tool_calls_shipped: 16
+max_turns_shipped: 22
+command_timeout_seconds_shipped: 180
+read_file_line_cap_reported: 150
+tool_output_chars_reported: 5000
+local_gpu_vram_mib: 4096
+real_model_inference: NOT_RUN
+official_harness: NOT_RUN
+
+allowed_model_ids:
+  - gemma-4-31b-it-qat-w4a16-ct
+  - gemma-4-12b-it-qat-w4a16-ct
+  - gemma-4-e4b-it-qat-w4a16-ct
+  - gemma-4-e2b-it-qat-w4a16-ct
+
+default_model: gemma-4-31b-it-qat-w4a16-ct
+cross_task_evaluation_memory: false
+online_weight_updates: false
+subagents_enabled: false
+lora_enabled: false

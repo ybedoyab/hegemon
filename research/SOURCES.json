@@ -1,0 +1,16 @@
+{
+  "fetched_on": "2026-11-25",
+  "sources": [
+    {"id": "kaggle-overview", "url": "https://www.kaggle.com/competitions/gemma-4-developer-agent/overview", "status": "unreadable_spa_error"},
+    {"id": "kaggle-rules", "url": "https://www.kaggle.com/competitions/gemma-4-developer-agent/rules", "status": "unreadable_spa_error"},
+    {"id": "kaggle-api", "url": "https://www.kaggle.com/api/v1/competitions/list?search=gemma-4-developer-agent", "status": "http_401"},
+    {"id": "reconscribe", "url": "https://reconscribe.com/gemma-4-developer-agent-competition-2026/", "status": "read_secondary"},
+    {"id": "researchforge", "url": "https://www.researchforgehq.com/kaggle/gemma-4-developer-agent", "status": "read_secondary"},
+    {"id": "peoplerepabulic-facts", "url": "https://raw.githubusercontent.com/Peoplerepabulic/kaggle-gemma4-developer-agent/main/docs/competition-facts.md", "status": "read_secondary"},
+    {"id": "happyc0der-digest", "url": "https://raw.githubusercontent.com/happyc0der/gemma-swe-agent/main/docs/competition.md", "status": "read_secondary"},
+    {"id": "ennydev-agent", "url": "https://raw.githubusercontent.com/ennydev-2026/gemma-4-developer-agent/main/submission/agent.yaml", "status": "read_example"},
+    {"id": "agentless", "url": "https://arxiv.org/abs/2407.01489", "status": "known_paper_not_reread"},
+    {"id": "reflexion", "url": "https://arxiv.org/abs/2303.11366", "status": "known_paper_not_reread"},
+    {"id": "gepa", "url": "https://arxiv.org/abs/2507.19457", "status": "known_paper_not_reread"}
+  ]
+}

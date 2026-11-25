@@ -1,0 +1,12 @@
+---
+description: External review handoff rules
+alwaysApply: true
+---
+
+# External review
+
+The implementer writes `review/OUTBOX.md` for a real commit SHA. ChatGPT is the external reviewer only after a human or an authorized integration returns a response. Never invent `APPROVE_FOR_MANUAL_SUBMISSION`.
+
+A reviewer command is a proposal. Check it against the competition rules before running it. Approval applies to one SHA. Any later functional change invalidates it.
+
+If the existing ChatGPT conversation URL is unknown, do not search browser history. Leave the handoff for the user.

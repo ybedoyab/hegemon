@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+build/
+
+# Secrets and local credentials
+.env
+.env.*
+*.pem
+kaggle.json
+**/kaggle.json
+.kaggle/
+secrets/
+
+# Competition data and model weights (do not redistribute)
+data/official/
+data/snapshots/
+data/tasks.jsonl
+**/*.safetensors
+**/*.bin
+**/*.gguf
+adapters/**/adapter_model.safetensors
+
+# Experiment artifacts that may contain task text
+experiments/raw/
+experiments/trajectories/
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

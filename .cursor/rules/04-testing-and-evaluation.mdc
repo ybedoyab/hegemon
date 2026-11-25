@@ -1,0 +1,12 @@
+---
+description: How to test and what a pass does not prove
+alwaysApply: true
+---
+
+# Testing and evaluation
+
+Run `python -m pytest -q` before promoting a change. Categories stay separate: `UNIT`, `MOCK_RUNTIME`, `REAL_MODEL_RUNTIME`, `OFFICIAL_HARNESS`.
+
+Passing unit tests does not establish a solve rate. `REAL_MODEL_RUNTIME` and `OFFICIAL_HARNESS` stay `NOT_RUN` until a Gemma checkpoint and the official dataset have actually been executed.
+
+Report solved/attempted counts. Do not report oracle pass@k as the selected-patch solve rate. Do not weaken a test to make CI green.

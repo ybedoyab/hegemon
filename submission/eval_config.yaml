@@ -1,0 +1,8 @@
+# Official shape from HARNESS_README.md (downloaded 2026-11-25): keys live under evaluation.
+# timeout_seconds is the per-command cap, not the task cap.
+# Agent time excludes container setup. Five minutes matches the v4-v6 comparison budget.
+evaluation:
+  timeout_seconds: 120
+  max_tool_calls: 24
+  max_time_minutes: 5
+  max_turns: 40

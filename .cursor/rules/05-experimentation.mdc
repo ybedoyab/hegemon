@@ -1,0 +1,12 @@
+---
+description: Champion promotion and experiment records
+alwaysApply: true
+---
+
+# Experimentation
+
+An experiment record includes id, dataset, model, prompt hash, seed, hardware, command, and outcome. Use `src/hegemon/telemetry/record.py`.
+
+Promote a challenger only when `promote()` would return `promoted`: same task count, measured solve rate, no regression. Keep the previous champion config for rollback.
+
+Synthetic fixture recall is not a Kaggle score. Write that distinction in the result file.

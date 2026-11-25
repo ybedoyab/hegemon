@@ -1,0 +1,38 @@
+{
+  "task": "fastapi_15661",
+  "repo": "fastapi/fastapi",
+  "model": "gemma-4-12b-it-qat-w4a16-ct",
+  "tensor_parallel": 4,
+  "budget": {"max_time_minutes": 5, "max_tool_calls": 24, "max_turns": 40, "timeout_seconds": 120},
+  "versions": {
+    "4": {
+      "resolved": false,
+      "tool_calls": 19,
+      "duration_seconds": 72.3,
+      "patch_chars": 0,
+      "prompt_tokens": 186213,
+      "completion_tokens": 3749,
+      "localize_problem_chars": 28,
+      "title_gate_fired": false,
+      "ranked_files": 0,
+      "edits": 0,
+      "failure": "title_paraphrase_then_repeated_grep"
+    },
+    "5": {
+      "resolved": false,
+      "tool_calls": 16,
+      "duration_seconds": 307.6,
+      "patch_chars": 0,
+      "prompt_tokens": 151358,
+      "completion_tokens": 4371,
+      "localize_problem_chars": 245,
+      "title_gate_fired": false,
+      "reported_confidence": 0.664,
+      "reported_strategy": "direct_repair",
+      "ranked_files_were_skill_scripts": true,
+      "edits": 0,
+      "failure": "false_localization_on_skill_tree_and_timeout"
+    }
+  },
+  "gate_conclusion": "The title-only gate did not fire on version 5. It neither improved retrieval nor blocked this search. The 0.664 confidence was a scan of the skill directory, not the task repository."
+}

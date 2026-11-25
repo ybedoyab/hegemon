@@ -1,0 +1,14 @@
+---
+description: What is allowed to run inside the Kaggle harness
+alwaysApply: true
+---
+
+# Runtime architecture
+
+`submission/` is the competition runtime: `agent.yaml`, prompts, skill scripts, and `eval_config.yaml`. `src/hegemon/` is the development runtime and must not be required at Kaggle score time.
+
+Skill scripts use the Python standard library only. They write scratch state under `HEGEMON_STATE_DIR` (default `/tmp/hegemon`), never inside the repository. The grader includes untracked workspace files in the diff.
+
+Map controller, localization, verification, and recovery onto one Gemma model plus those scripts. Do not add a sub-agent until an experiment shows a solve-rate gain that pays for the extra calls.
+
+Default model id: `gemma-4-31b-it-qat-w4a16-ct`. Do not ship a LoRA until a real training run produces `adapter_model.safetensors`.
