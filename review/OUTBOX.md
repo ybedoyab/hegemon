@@ -8,8 +8,9 @@ Date: 2026-11-25
 - Visibility: private
 - Branch: `feat/hegemon-core`
 - Agent commit: `11352bb13f2651249c5d04172e4c3ad3a69a59eb`
-- Pull request: filled in after `gh pr create`
-- Remote verification: pending until push
+- Pull request: https://github.com/ybedoyab/hegemon/pull/1
+- Branch head: `f59df4e079b3cfde79a12d3f16f943c8b0c5ac3d`
+- Remote verification: `git ls-remote` matched `f59df4e079b3cfde79a12d3f16f943c8b0c5ac3d` on `origin/feat/hegemon-core`
 
 ## Scope
 
