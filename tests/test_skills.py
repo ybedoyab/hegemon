@@ -21,6 +21,16 @@ def _run_localize(workspace: Path, problem: str, state_dir: Path) -> dict:
     return json.loads((state_dir / "state.json").read_text(encoding="utf-8"))
 
 
+def test_localize_rejects_a_title_paraphrase(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    os.environ["HEGEMON_STATE_DIR"] = str(tmp_path / "state")
+    os.environ["HEGEMON_WORKSPACE"] = str(FIXTURES / "coercion")
+    script = load_script("localize")
+    script.sys.argv = ["localize.py", "--problem", "Automate release preparation", "--workspace", str(FIXTURES / "coercion")]
+    script.main()
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["error"] == "problem_too_short"
+
+
 def test_localize_ranks_named_symbol_first(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     state = _run_localize(
         FIXTURES / "coercion",

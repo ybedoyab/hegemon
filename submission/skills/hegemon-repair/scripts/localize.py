@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -141,6 +142,24 @@ def main() -> None:
         return
     if not problem.strip():
         common.emit({"error": "problem_required", "next_action": "stop"})
+        return
+    # A title paraphrase produced confidence 0 on the first real task and the
+    # model then searched unrelated scripts. A query with a function name,
+    # exception, or path is still accepted.
+    codeish = re.compile(r"[A-Za-z_][A-Za-z0-9]*_[A-Za-z0-9_]+|[A-Z][a-z0-9]+[A-Z][A-Za-z0-9]+")
+    if (
+        len(problem.strip()) < 80
+        and not common.TRACE_RE.search(problem)
+        and not common.PATH_RE.search(problem)
+        and not codeish.search(problem)
+    ):
+        common.emit(
+            {
+                "error": "problem_too_short",
+                "next_action": "graph_expand",
+                "note": "Copy exception names and file paths from the issue. Do not pass a title.",
+            }
+        )
         return
 
     localization = score_repository(workspace, problem)
