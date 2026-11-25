@@ -1,0 +1,26 @@
+{
+  "task": "fastapi_15661",
+  "model": "gemma-4-12b-it-qat-w4a16-ct",
+  "tensor_parallel": 4,
+  "budget": {"max_time_minutes": 5, "max_tool_calls": 24, "max_turns": 40},
+  "version": 6,
+  "commit": "7e67e08",
+  "resolved": false,
+  "tool_calls": 10,
+  "duration_seconds": 307.1,
+  "patch_chars": 0,
+  "prompt_tokens": 90438,
+  "completion_tokens": 3799,
+  "total_tokens": 94237,
+  "edits": 0,
+  "localize_calls": 0,
+  "workspace_discovery_exercised": false,
+  "files_read": [
+    "scripts/add_latest_release_date.py",
+    "scripts/docs.py",
+    "docs/en/docs/release-notes.md",
+    "pyproject.toml"
+  ],
+  "failure": "timeout_without_edit_skill_not_called",
+  "promoted": false
+}

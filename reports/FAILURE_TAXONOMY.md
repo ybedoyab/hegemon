@@ -29,4 +29,8 @@ Same task, same 12B checkpoint, same 5-minute and 24-call budget.
 | Ranked files | none, confidence 0 | five skill scripts, confidence 0.664, strategy direct_repair |
 | Search after that | grep and ls for release | grep and ls for release, including two full reads of 39-line and 40-line files |
 
-The gate did not improve retrieval. It also did not block a valid symbol query on this task, because the accepted query contained no symbol. The confidence increase is a scan of `skills/hegemon-repair`, which the skill process used when `/workspace` was not the checkout. The subprocess sandbox keeps the checkout under `/tmp/swegemma_sandbox_*/workspace`. Version 6 searches that checkout and refuses to rank the skill tree. After an untruncated read, the prompt now requires `edit_file` instead of another grep.
+The gate did not improve retrieval. It also did not block a valid symbol query on this task, because the accepted query contained no symbol. The confidence increase is a scan of `skills/hegemon-repair`, which the skill process used when `/workspace` was not the checkout. The subprocess sandbox keeps the checkout under `/tmp/swegemma_sandbox_*/workspace`.
+
+## Version 6
+
+Same task and budget. `resolved=false`, 10 tool calls, 307.1s, 0 patch characters, 94,237 tokens. The trace contains no `run_skill_script` call, so the sandbox discovery did not run. The model listed `scripts/`, grepped for `release`, and fully read `scripts/add_latest_release_date.py` (40 lines, not truncated) without calling `edit_file`. Failure class: timeout with no edit. The skill-tree bug remains unmeasured on this run.

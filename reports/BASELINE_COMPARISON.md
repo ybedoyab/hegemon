@@ -12,6 +12,10 @@ Date: 2026-11-25. One development task. Not a leaderboard score and not a projec
 
 Version 5 is not a champion. Solve rate stayed 0 of 1, time to first edit stayed infinite, and the higher confidence was measured on the wrong tree.
 
+| HEGEMON version 6, sandbox discovery | same | fastapi_15661 | no | 10 | 307.1s | 0 | Timed out. The skill was never called, so workspace discovery did not run. No edit. 94,237 tokens. |
+
+Version 6 is not a champion. Solve rate is still 0 of 1. Token use fell from 155,729 to 94,237 because there were fewer calls, not because a patch was found.
+
 The checked-in submission model is still `gemma-4-31b-it-qat-w4a16-ct`. This session overrode the copy to 12B. vLLM reported `tp=4`.
 
 Solved tasks: 0 of 1 for the sample, 0 of 1 for HEGEMON. The HEGEMON row did not attempt a repair.
