@@ -1,0 +1,10 @@
+{
+  "champion_id": "E002-structured-skill-policy",
+  "model": "gemma-4-31b-it-qat-w4a16-ct",
+  "adapter": null,
+  "solve_rate": null,
+  "solve_rate_status": "NOT_RUN",
+  "dataset": null,
+  "synthetic_localization_top1": "2/2",
+  "rollback": "submission/prompts/parts at this commit"
+}

@@ -1,0 +1,12 @@
+---
+description: Git remote, commits, and pushes
+alwaysApply: true
+---
+
+# Git workflow
+
+Remote: `https://github.com/ybedoyab/hegemon` only. The repository is private; competitive code may be pushed. Re-check visibility before every push.
+
+Commit on a feature branch. Do not force-push, rewrite history, or skip hooks. Do not commit `.env`, `kaggle.json`, datasets, or weights.
+
+The user authorized commits and pushes for this project. Still do not submit to Kaggle.

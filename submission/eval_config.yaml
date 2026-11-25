@@ -1,0 +1,7 @@
+# Per-task caps so one hard instance cannot consume the 12-hour run.
+# Field names follow the public HARNESS_README digest (2026-09-24 dataset copy).
+# They were not re-checked against a local HARNESS_README. See docs/COMPETITION_CONTRACT.md.
+max_time_minutes: 4
+max_tool_calls: 16
+max_turns: 22
+timeout_seconds: 180

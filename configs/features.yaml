@@ -1,0 +1,5 @@
+cross_task_evaluation_memory: false
+online_weight_updates: false
+subagents: false
+lora: false
+external_model_distillation: false

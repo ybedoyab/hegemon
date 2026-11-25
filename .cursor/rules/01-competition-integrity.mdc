@@ -1,0 +1,14 @@
+---
+description: Competition integrity and data isolation
+alwaysApply: true
+---
+
+# Competition integrity
+
+The solving agent must not receive reference patches, hidden tests, or evaluator-only fields. Development labels stay in the evaluator process.
+
+`CROSS_TASK_EVALUATION_MEMORY` and `ONLINE_WEIGHT_UPDATES` stay false unless an official source explicitly allows a mechanism. Do not build issue-to-patch lookup tables. Do not infer hidden tests from leaderboard movement.
+
+Do not redistribute competition data. The GitHub repo `ybedoyab/hegemon` is the only remote. Do not push secrets, `kaggle.json`, raw trajectories that quote task text, or model weights.
+
+One submission per day is the user's decision. Never call the Kaggle submit API.

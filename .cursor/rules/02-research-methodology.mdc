@@ -1,0 +1,12 @@
+---
+description: Evidence standard for design and experiments
+alwaysApply: true
+---
+
+# Research methodology
+
+Every significant design choice records rationale, evidence, expected benefit, cost, risk, validation, and rollback in `docs/DECISIONS.md`.
+
+Status labels: `VERIFIED_ALLOWED`, `VERIFIED_REQUIRED`, `VERIFIED_PROHIBITED`, `UNKNOWN`, `BLOCKED`. A public blog is not `VERIFIED` against Kaggle. Cite the source URL and the date it was read.
+
+Prefer a measured simple baseline over an unmeasured complex agent. Record failed runs in `experiments/`. Do not delete them to clean the history.
