@@ -119,6 +119,47 @@ def score_repository(root: Path, problem: str) -> dict:
     }
 
 
+def is_skill_tree(root: Path) -> bool:
+    return (root / "SKILL.md").is_file() and (root / "scripts" / "localize.py").is_file()
+
+
+def has_repo_marker(root: Path) -> bool:
+    return any((root / name).exists() for name in (".git", "pyproject.toml", "setup.py", "setup.cfg"))
+
+
+def discover_workspace(explicit: str | None, sandbox_root: Path | None = None) -> Path | None:
+    """Find the task repository.
+
+    The skill process often cannot see the harness path /workspace. The subprocess
+    sandbox keeps the checkout under /tmp/swegemma_sandbox_*/workspace. Scanning the
+    skill directory ranks this script and reports a false confidence.
+    """
+    ordered: list[Path] = []
+    if explicit:
+        ordered.append(Path(explicit))
+    ordered.append(common.default_workspace())
+    root = sandbox_root if sandbox_root is not None else Path("/tmp")
+    if root.is_dir():
+        sandboxes = [path for path in root.glob("swegemma_sandbox_*") if path.is_dir()]
+        sandboxes.sort(key=lambda path: path.stat().st_mtime, reverse=True)
+        for sandbox in sandboxes[:4]:
+            ordered.append(sandbox / "workspace")
+            ordered.append(sandbox)
+    for candidate in ordered:
+        try:
+            if candidate.is_dir() and not is_skill_tree(candidate) and has_repo_marker(candidate):
+                return candidate.resolve()
+        except OSError:
+            continue
+    for candidate in ordered[:2]:
+        try:
+            if candidate.is_dir() and not is_skill_tree(candidate):
+                return candidate.resolve()
+        except OSError:
+            continue
+    return None
+
+
 def next_action_for(localization: dict) -> str:
     files = localization.get("files") or []
     if not files:
@@ -136,9 +177,15 @@ def main() -> None:
         path = Path(problem_file)
         if path.is_file():
             problem = path.read_text(encoding="utf-8", errors="replace")
-    workspace = common.resolve_workspace(args.get("workspace"))
-    if not workspace.is_dir():
-        common.emit({"error": "workspace_missing", "workspace": str(workspace), "next_action": "stop"})
+    workspace = discover_workspace(args.get("workspace"))
+    if workspace is None:
+        common.emit(
+            {
+                "error": "workspace_not_visible",
+                "next_action": "graph_expand",
+                "note": "The skill cannot see the repository. Call search_similar_code with a symbol copied from the issue, then read_file.",
+            }
+        )
         return
     if not problem.strip():
         common.emit({"error": "problem_required", "next_action": "stop"})
@@ -195,7 +242,12 @@ def main() -> None:
             "symbols": localization["symbols"],
             "related_tests": localization["related_tests"],
             "state_dir": str(common.state_dir()),
-            "note": "Scratch stays in the state dir. Do not write notes under the repository.",
+            "note": (
+                f"Next call is read_file on {localization['files'][0]['file']}. "
+                "If that read is not truncated, the following call is edit_file. Do not grep."
+                if localization["files"]
+                else "No file ranked. Call search_similar_code with a symbol copied from the issue."
+            ),
         }
     )
 

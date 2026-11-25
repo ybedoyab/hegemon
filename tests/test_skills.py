@@ -21,6 +21,34 @@ def _run_localize(workspace: Path, problem: str, state_dir: Path) -> dict:
     return json.loads((state_dir / "state.json").read_text(encoding="utf-8"))
 
 
+def test_localize_does_not_rank_its_own_skill_tree(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    skill = Path(__file__).parents[1] / "submission" / "skills" / "hegemon-repair"
+    os.environ["HEGEMON_STATE_DIR"] = str(tmp_path / "state")
+    os.environ["HEGEMON_WORKSPACE"] = str(skill)
+    script = load_script("localize")
+    script.sys.argv = [
+        "localize.py",
+        "--problem",
+        "The release preparation workflow should update the date before publishing the package to users.",
+        "--workspace",
+        str(skill),
+    ]
+    script.main()
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["error"] == "workspace_not_visible"
+    assert "localize.py" not in json.dumps(payload.get("files", []))
+
+
+def test_discover_workspace_prefers_sandbox_checkout(tmp_path: Path) -> None:
+    script = load_script("localize")
+    checkout = tmp_path / "swegemma_sandbox_test" / "workspace"
+    checkout.mkdir(parents=True)
+    (checkout / "pyproject.toml").write_text("[project]\nname='demo'\n", encoding="utf-8")
+    os.environ["HEGEMON_WORKSPACE"] = str(tmp_path / "missing")
+    found = script.discover_workspace(None, sandbox_root=tmp_path)
+    assert found == checkout.resolve()
+
+
 def test_localize_rejects_a_title_paraphrase(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     os.environ["HEGEMON_STATE_DIR"] = str(tmp_path / "state")
     os.environ["HEGEMON_WORKSPACE"] = str(FIXTURES / "coercion")

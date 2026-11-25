@@ -21,7 +21,7 @@ First call `run_skill_script` with `skill_name` `hegemon-repair` and `file_path`
 - `submit`: `diff_guard.py`. Call `submit_patch` only when it returns `submit`.
 - `stop`: call `submit_patch` only when `diff_guard.py` accepts a non-empty diff.
 
-When confidence is high, read one window and edit. When two files score similarly, read the second before editing. When a targeted test fails after the edit, use the failure text before the next edit. When `get_status` shows few calls left, or the same fingerprint has failed twice, submit the best diff the guard accepts.
+When confidence is high, read one window and edit. When `read_file` returns a file that is not truncated, the next call is `edit_file` or `state_update.py` with a reason that file is not the cause. Do not `grep` or `ls` that path again. When two files score similarly, read the second before editing. When a targeted test fails after the edit, use the failure text before the next edit. When `get_status` shows few calls left, or the same fingerprint has failed twice, submit the best diff the guard accepts.
 
 ## Tools
 

@@ -13,3 +13,20 @@ Source: private notebook `ybedoyab/hegemon-dev-eval` version 3, trace `trace_fas
 Tokens for the HEGEMON attempt: 105,738 prompt, 18,527 completion, 124,265 total, 0 cached. `vLLM` started with `tp=4`.
 
 The official sample on version 2 of the same notebook also timed out on this task, at its own 1-minute cap, with 10 tool calls and no patch. That row is a budget timeout, not the same localization failure.
+
+## Version 4 versus version 5
+
+Same task, same 12B checkpoint, same 5-minute and 24-call budget.
+
+| | Version 4 | Version 5 |
+| --- | --- | --- |
+| Resolved | no | no |
+| Tool calls | 19 | 16 |
+| Duration | 72.3s | 307.6s |
+| Edits | 0 | 0 |
+| Localize query | 28 characters, no code token | 245 characters, no path, snake_case, CamelCase, or traceback |
+| Title gate | not in that build | did not fire |
+| Ranked files | none, confidence 0 | five skill scripts, confidence 0.664, strategy direct_repair |
+| Search after that | grep and ls for release | grep and ls for release, including two full reads of 39-line and 40-line files |
+
+The gate did not improve retrieval. It also did not block a valid symbol query on this task, because the accepted query contained no symbol. The confidence increase is a scan of `skills/hegemon-repair`, which the skill process used when `/workspace` was not the checkout. The subprocess sandbox keeps the checkout under `/tmp/swegemma_sandbox_*/workspace`. Version 6 searches that checkout and refuses to rank the skill tree. After an untruncated read, the prompt now requires `edit_file` instead of another grep.

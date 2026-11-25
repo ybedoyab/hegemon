@@ -41,3 +41,7 @@ The failure is the skill-name rejection above. No repair was attempted.
 `validate_directory` again printed `HEGEMON_OFFICIAL_VALIDATE_OK`. The compiler accepted `hegemon-repair`. vLLM started with `tp=4`.
 
 HEGEMON on `fastapi_15661`: `resolved=false`, 11 tool calls, 307.2 seconds, 0 patch characters. The harness timed the agent out. See `reports/FAILURE_TAXONOMY.md`.
+
+## Versions 4 and 5
+
+Both completed `HEGEMON_OFFICIAL_VALIDATE_OK` and started vLLM with `tp=4`. Neither solved `fastapi_15661`. Version 5's localize confidence of 0.664 ranked the skill scripts. That is not a successful localization.
