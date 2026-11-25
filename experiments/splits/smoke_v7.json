@@ -1,0 +1,11 @@
+{
+  "id": "smoke_v7",
+  "seed": 20261125,
+  "rule": "For each of fastapi/fastapi, Textualize/rich, and psf/requests, take the first id from Random(20261125).sample(sorted instance ids, 3). Exclude encode/httpx. Add fastapi_15661 as the continuity diagnostic, not as the only task.",
+  "diagnostic": ["fastapi_15661"],
+  "tasks": ["fastapi_15661", "fastapi_13537", "rich_2725", "requests_6629"],
+  "held_out_repo": "encode/httpx",
+  "budget": {"max_time_minutes": 5, "max_tool_calls": 24, "max_turns": 40, "timeout_seconds": 120},
+  "model_in_notebook": "gemma-4-12b-it-qat-w4a16-ct",
+  "checked_in_model": "gemma-4-31b-it-qat-w4a16-ct"
+}

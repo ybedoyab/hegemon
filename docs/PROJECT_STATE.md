@@ -4,43 +4,24 @@ Updated: 2026-11-25
 
 ## Phase
 
-`IMPLEMENTING`. Official harness file and sample submission are downloaded. Rules are accepted. Gemma inference is `NOT_RUN`. Official baseline is `NOT_RUN`.
-
-## Machine
-
-- Windows 11, Ryzen 7 5800U, 16 logical CPUs, 15.36 GB RAM (about 2.4 GB free at discovery)
-- NVIDIA GeForce RTX 3050 Ti Laptop, 4096 MiB, driver 591.44, compute capability 8.6
-- Python 3.12.3 and 3.11.9, Git 2.41, GitHub CLI logged in as `ybedoyab`, uv 0.12.5
-- Docker client 29.8.0 installed; the daemon was not running. WSL2 Ubuntu is installed.
-- Kaggle CLI 2.2.5 is installed in `D:\cache\hegemon-venv` and logged in as `ybedoyab` through browser OAuth. Credentials are outside the repository.
-- Hugging Face cache contains only `sentence-transformers/all-MiniLM-L6-v2`. No Gemma checkpoint.
-- C: had about 1.1 GB free. D: had about 142 GB free. Keep caches on D:.
-
-## Repository
-
-- `https://github.com/ybedoyab/hegemon`
-- Private, default branch `main`, initial commit `5134dcb` at discovery
-- Push permission works for `ybedoyab`
-- Branch protection API returned HTTP 403 (GitHub Pro required). Treat `main` as unprotected.
+`IMPLEMENTING`. Rules are accepted. Kaggle CLI is logged in as `ybedoyab`. Real 12B inference has run on one development task. Solve rate on that task is 0/1 for the official sample and for HEGEMON versions 2 through 6. Nothing has been submitted to the leaderboard.
 
 ## Champion
 
-`configs/champion.json`: structured single-agent policy. Solve rate `null`. Status `NOT_RUN` on the official harness.
+No champion. `configs/champion.json` is not promoted. Versions 5 and 6 stay rejected: same 0/1 solve rate, no edit.
 
-## What is implemented
+## What is measured
 
-- Submission prompt and skill scripts: localize, state update, pytest summary, diff guard
-- Development policy wrappers, budget split, experience compiler, evolution gate
-- Zip builder and 17 unit tests
-- Synthetic localization probe: 2/2 top-1
+- Official validator accepts the package (`HEGEMON_OFFICIAL_VALIDATE_OK`).
+- Notebook `ybedoyab/hegemon-dev-eval` versions 2–6 completed on Nvidia L4 with vLLM `tp=4` and `gemma-4-12b-it-qat-w4a16-ct`.
+- Version 4 stopped at 72.3 seconds on `ContextWindowExceededError` (32,768 combined limit, 16,384 reserved output tokens).
+- Versions 5 and 6 timed out at about 307 seconds with no patch. Version 5 ranked skill scripts. Version 6 never called the skill.
+- Checked-in model id remains `gemma-4-31b-it-qat-w4a16-ct`. That id has not been executed.
 
-## What is not implemented
+## Current candidate
 
-- Official starter reproduction
-- Any Gemma generation
-- LoRA training
-- A scored Kaggle submission
+V7A: native harness tools, no attached skill, `max_output_tokens` 4096, `thinking_budget` 1024. Smoke ids are in `experiments/splits/smoke_v7.json`. Measurement is not back yet.
 
-## Immediate blocker
+## Review
 
-No permitted Gemma checkpoint has been executed. The local GPU has 4 GB and cannot load the 31B checkpoint. The submission schema now matches the downloaded harness. A solve rate does not exist yet.
+`REQUEST_CHANGES` on `7e67e08`. Approval is null.

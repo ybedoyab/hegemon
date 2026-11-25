@@ -1,7 +1,9 @@
 {
   "state": "REQUEST_CHANGES",
   "reviewer_decision": "REQUEST_CHANGES",
-  "reviewed_sha": "7dfcd784de8fcac408e4738f882f00905c0b0789",
+  "reviewed_sha": "7e67e08",
+  "measurement_sha": "7362c43",
+  "handoff_sha": "9855735",
   "approval": null,
-  "note": "ChatGPT review of 7dfcd78 returned REQUEST_CHANGES. No Gemma result yet. Private notebook ybedoyab/hegemon-dev-eval version 1 is running on NvidiaL4."
+  "note": "Iteration 4 review of the v4-v6 fastapi_15661 traces. Do not promote v5 or v6. No leaderboard submission until APPROVE_FOR_MANUAL_SUBMISSION."
 }

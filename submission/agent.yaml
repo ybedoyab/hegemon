@@ -1,10 +1,8 @@
 name: hegemon
 model: gemma-4-31b-it-qat-w4a16-ct
-description: Adaptive software repair agent. Chooses the next action from evidence and submits one patch.
+description: Native-tool software repair agent. Searches the task repository, edits from evidence, and submits one patch.
 instruction: !include prompts/system.md
 generate_content_config: !include configs/sampling.yaml
-skills:
-  - skills/hegemon-repair
 tools:
   - run_command
   - read_file

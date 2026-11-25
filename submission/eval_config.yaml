@@ -1,7 +1,6 @@
 # Official shape from HARNESS_README.md (downloaded 2026-11-25): keys live under evaluation.
 # timeout_seconds is the per-command cap, not the task cap.
-# Agent time excludes container setup. 5 minutes * ~120 tasks stays inside a 12 hour run
-# only if sandbox setup stays modest. This is a budget hypothesis, not a measured optimum.
+# Agent time excludes container setup. Five minutes matches the v4-v6 comparison budget.
 evaluation:
   timeout_seconds: 120
   max_tool_calls: 24

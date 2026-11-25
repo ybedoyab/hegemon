@@ -6,7 +6,7 @@ Date: 2026-11-25. `VERIFIED_HARNESS` means the claim is in the downloaded `HARNE
 | --- | --- | --- | --- |
 | Rules accepted for this account | VERIFIED_PAGE | Rules tab banner, 2026-11-25 | n/a |
 | `agent.yaml` at zip root, bare tool names, `!include` | VERIFIED_HARNESS | Official sample `agent.yaml` | yes |
-| Skills attached with `skills:` directory list | VERIFIED_HARNESS | Harness skills section and sample shape | `skills/hegemon_repair` |
+| Skills attached with `skills:` directory list | VERIFIED_HARNESS | Harness skills section and sample shape | V7A omits `skills:`. Directory `skills/hegemon-repair` is not loaded. |
 | Zip unpacked size < 3 GiB, no symlinks, no `..` | VERIFIED_HARNESS | `build_submission_limits` | packer enforces size class and paths |
 | Model `gemma-4-31b-it-qat-w4a16-ct` | VERIFIED_HARNESS | Allowed model list | selected |
 | 12B, E4B, E2B QAT checkpoints allowed | VERIFIED_HARNESS | Same list | not selected |

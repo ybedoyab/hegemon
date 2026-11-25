@@ -40,7 +40,7 @@ Unquantized Gemma variants are documented as local-CLI only. No LoRA is shipped.
 
 ## Submission shape
 
-Official sample `agent.yaml` uses bare tool names, `instruction: !include`, and `generate_content_config: !include`. Skills are a list of relative directories. This submission matches that shape and adds `skills: [skills/hegemon_repair]`. It does not declare `load_skill` as a harness tool. The harness adds skill tools when `skills:` is set.
+Official sample `agent.yaml` uses bare tool names, `instruction: !include`, and `generate_content_config: !include`. Skills are a list of relative directories. V7A matches that shape and does not set `skills:`. The repair skill remains in the tree for a later comparison and is not offered to the model. It does not declare `load_skill` as a harness tool. The harness adds skill tools when `skills:` is set.
 
 `agent_class: LlmAgent` is the documented default and is omitted, matching the sample.
 

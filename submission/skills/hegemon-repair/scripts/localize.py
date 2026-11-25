@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -33,7 +32,7 @@ def score_repository(root: Path, problem: str) -> dict:
     ranked: list[dict] = []
     symbols: list[dict] = []
     if not query and not traces:
-        return {"files": [], "symbols": [], "confidence": 0.0, "strategy": "search_first"}
+        return {"files": [], "symbols": [], "related_tests": [], "relevance": 0.0, "strategy": "search_first"}
 
     for path in common.iter_python_files(root):
         relative = path.relative_to(root).as_posix()
@@ -99,12 +98,13 @@ def score_repository(root: Path, problem: str) -> dict:
     top = primary[:5]
     top_score = top[0]["score"] if top else 0.0
     second = top[1]["score"] if len(top) > 1 else 0.0
-    confidence = 0.0 if top_score <= 0 else top_score / (top_score + second + 1e-6)
+    # Uncalibrated overlap ratio. It is not a probability that the file is the cause.
+    relevance = 0.0 if top_score <= 0 else top_score / (top_score + second + 1e-6)
     if not top:
         strategy = "search_first"
-    elif confidence >= 0.62:
+    elif relevance >= 0.62:
         strategy = "direct_repair"
-    elif len(top) >= 3 and confidence < 0.45:
+    elif len(top) >= 3 and relevance < 0.45:
         strategy = "search_first"
     else:
         strategy = "direct_repair"
@@ -114,7 +114,7 @@ def score_repository(root: Path, problem: str) -> dict:
         "files": top,
         "related_tests": tests[:3],
         "symbols": symbols[:6],
-        "confidence": round(confidence, 3),
+        "relevance": round(relevance, 3),
         "strategy": strategy,
     }
 
@@ -128,32 +128,22 @@ def has_repo_marker(root: Path) -> bool:
 
 
 def discover_workspace(explicit: str | None, sandbox_root: Path | None = None) -> Path | None:
-    """Find the task repository.
+    """Accept only a verified repository path.
 
-    The skill process often cannot see the harness path /workspace. The subprocess
-    sandbox keeps the checkout under /tmp/swegemma_sandbox_*/workspace. Scanning the
-    skill directory ranks this script and reports a false confidence.
+    ``run_command`` and ``read_file`` resolve paths inside the task checkout.
+    A skill script does not. ``sandbox_root`` is ignored: searching
+    ``/tmp/swegemma_sandbox_*`` is not a documented skill input, and ranking
+    the skill directory produced a false relevance score.
     """
+    del sandbox_root
     ordered: list[Path] = []
     if explicit:
         ordered.append(Path(explicit))
-    ordered.append(common.default_workspace())
-    root = sandbox_root if sandbox_root is not None else Path("/tmp")
-    if root.is_dir():
-        sandboxes = [path for path in root.glob("swegemma_sandbox_*") if path.is_dir()]
-        sandboxes.sort(key=lambda path: path.stat().st_mtime, reverse=True)
-        for sandbox in sandboxes[:4]:
-            ordered.append(sandbox / "workspace")
-            ordered.append(sandbox)
+    else:
+        ordered.append(common.default_workspace())
     for candidate in ordered:
         try:
             if candidate.is_dir() and not is_skill_tree(candidate) and has_repo_marker(candidate):
-                return candidate.resolve()
-        except OSError:
-            continue
-    for candidate in ordered[:2]:
-        try:
-            if candidate.is_dir() and not is_skill_tree(candidate):
                 return candidate.resolve()
         except OSError:
             continue
@@ -164,7 +154,7 @@ def next_action_for(localization: dict) -> str:
     files = localization.get("files") or []
     if not files:
         return "graph_expand"
-    if localization.get("strategy") == "search_first" and localization.get("confidence", 0) < 0.45:
+    if localization.get("strategy") == "search_first" and localization.get("relevance", 0) < 0.45:
         return "graph_expand"
     return "read_top_file"
 
@@ -188,25 +178,7 @@ def main() -> None:
         )
         return
     if not problem.strip():
-        common.emit({"error": "problem_required", "next_action": "stop"})
-        return
-    # A title paraphrase produced confidence 0 on the first real task and the
-    # model then searched unrelated scripts. A query with a function name,
-    # exception, or path is still accepted.
-    codeish = re.compile(r"[A-Za-z_][A-Za-z0-9]*_[A-Za-z0-9_]+|[A-Z][a-z0-9]+[A-Z][A-Za-z0-9]+")
-    if (
-        len(problem.strip()) < 80
-        and not common.TRACE_RE.search(problem)
-        and not common.PATH_RE.search(problem)
-        and not codeish.search(problem)
-    ):
-        common.emit(
-            {
-                "error": "problem_too_short",
-                "next_action": "graph_expand",
-                "note": "Copy exception names and file paths from the issue. Do not pass a title.",
-            }
-        )
+        common.emit({"error": "problem_required", "next_action": "stop", "scope": str(workspace)})
         return
 
     localization = score_repository(workspace, problem)
@@ -237,7 +209,9 @@ def main() -> None:
         {
             "next_action": action,
             "strategy": localization["strategy"],
-            "confidence": localization["confidence"],
+            "relevance": localization["relevance"],
+            "outcome": "relevant" if localization["files"] else "no_results",
+            "scope": str(workspace),
             "files": localization["files"],
             "symbols": localization["symbols"],
             "related_tests": localization["related_tests"],

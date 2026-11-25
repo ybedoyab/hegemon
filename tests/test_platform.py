@@ -15,10 +15,12 @@ from hegemon.prompts.render import render_system_prompt, write_system_prompt
 
 def test_prompt_contains_policy_actions() -> None:
     text = render_system_prompt()
-    for action in ("read_top_file", "graph_expand", "edit", "reproduce", "rerun", "revise", "submit", "stop"):
-        assert action in text
-    assert "exactly one tool" in text
-    assert "/tmp/hegemon" in text
+    assert "edit_file" in text
+    assert "submit_patch" in text
+    assert "git grep -n" in text
+    assert "run_skill_script" not in text
+    assert "exactly one tool" not in text
+    assert len(text) < 3500
 
 
 def test_rendered_prompt_matches_checked_in_file() -> None:
@@ -74,14 +76,14 @@ def test_official_submission_shape() -> None:
     agent = (SUBMISSION / "agent.yaml").read_text(encoding="utf-8")
     eval_config = (SUBMISSION / "eval_config.yaml").read_text(encoding="utf-8")
     sampling = (SUBMISSION / "configs" / "sampling.yaml").read_text(encoding="utf-8")
-    assert "skills:" in agent
-    assert "skills/hegemon-repair" in agent
+    assert "skills:" not in agent
     assert "hegemon_repair" not in agent
     assert "- name:" not in agent
     assert "evaluation:" in eval_config
     assert "max_tool_calls:" in eval_config
     assert "thinking_level" not in sampling
-    assert "thinking_budget:" in sampling
+    assert "thinking_budget: 1024" in sampling
+    assert "max_output_tokens: 4096" in sampling
 
 
 def test_submission_tree_and_zip(tmp_path: Path) -> None:

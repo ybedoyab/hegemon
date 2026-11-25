@@ -59,3 +59,13 @@
 - Risk: we may forgo a legal training signal if the host later allows it.
 - Validation: no training run exists, so there is nothing to audit yet.
 - Rollback: revisit only after an official forum ruling is saved in `docs/OFFICIAL_SOURCES.md`.
+
+## D007 — V7A uses native tools and a 4096-token output cap
+
+- Rationale: version 4 died at 72.3 seconds because a 16,384-token output reservation plus a 16,385-token prompt exceeded the 32,768 combined window. Versions 5 and 6 then timed out at about 307 seconds without an edit. The skill ranked its own scripts when it ran, and version 6 never called it.
+- Evidence: `reports/ITERATION_3_FORENSICS.md` and `reports/FILESYSTEM_CONTRACT.md`, from notebook versions 3–6 on 2026-11-25. Harness text: `max_model_len = 32768` and `read_file` / `run_command` are workspace tools.
+- Expected benefit: the prompt can grow past 16,384 tokens, a single generation cannot request 16,384 completion tokens, and search hits the task checkout.
+- Cost: a tool call can be cut off if the model spends the 4,096 output tokens on reasoning. `thinking_budget` is 1,024 for this candidate.
+- Risk: 1,024 may be too small for a correct edit. That is unmeasured. The checked-in model remains 31B; the notebook still overrides to 12B.
+- Validation: unit tests for scope isolation. Notebook smoke on `experiments/splits/smoke_v7.json` is the measurement. Not promoted until that measurement exists.
+- Rollback: restore `max_output_tokens: 16384`, `thinking_budget: 4096`, and `skills:` in `agent.yaml` from commit `7e67e08`.

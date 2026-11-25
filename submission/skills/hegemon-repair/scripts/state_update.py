@@ -28,7 +28,7 @@ def classify(detail: str, category: str) -> str:
 def decide(state: dict, event: str, category: str, repeated: bool) -> str:
     attempts = int(state.get("attempts") or 0)
     localization = state.get("localization") or {}
-    confidence = float(localization.get("confidence") or 0)
+    confidence = float(localization.get("relevance") or localization.get("confidence") or 0)
     files = localization.get("files") or []
     reads = int(state.get("reads") or 0)
     if event == "read_done":

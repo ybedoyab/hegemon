@@ -39,24 +39,54 @@ def test_localize_does_not_rank_its_own_skill_tree(tmp_path: Path, capsys: pytes
     assert "localize.py" not in json.dumps(payload.get("files", []))
 
 
-def test_discover_workspace_prefers_sandbox_checkout(tmp_path: Path) -> None:
+def test_discover_workspace_does_not_scan_sandboxes(tmp_path: Path) -> None:
     script = load_script("localize")
     checkout = tmp_path / "swegemma_sandbox_test" / "workspace"
     checkout.mkdir(parents=True)
     (checkout / "pyproject.toml").write_text("[project]\nname='demo'\n", encoding="utf-8")
     os.environ["HEGEMON_WORKSPACE"] = str(tmp_path / "missing")
-    found = script.discover_workspace(None, sandbox_root=tmp_path)
-    assert found == checkout.resolve()
+    assert script.discover_workspace(None, sandbox_root=tmp_path) is None
+    assert script.discover_workspace(str(checkout), sandbox_root=tmp_path) == checkout.resolve()
 
 
-def test_localize_rejects_a_title_paraphrase(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+def test_short_title_is_not_rejected_for_length(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     os.environ["HEGEMON_STATE_DIR"] = str(tmp_path / "state")
     os.environ["HEGEMON_WORKSPACE"] = str(FIXTURES / "coercion")
     script = load_script("localize")
     script.sys.argv = ["localize.py", "--problem", "Automate release preparation", "--workspace", str(FIXTURES / "coercion")]
     script.main()
     payload = json.loads(capsys.readouterr().out)
-    assert payload["error"] == "problem_too_short"
+    assert "error" not in payload
+    assert "confidence" not in payload
+    assert "relevance" in payload
+
+
+def test_localize_ignores_same_name_inside_skill_tree(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    repo = tmp_path / "repo"
+    (repo / "pkg").mkdir(parents=True)
+    (repo / "pyproject.toml").write_text("[project]\nname='demo'\n", encoding="utf-8")
+    (repo / "pkg" / "parse.py").write_text("def parse_value(raw):\n    return int(raw)\n", encoding="utf-8")
+    skill = tmp_path / "skill"
+    (skill / "scripts").mkdir(parents=True)
+    (skill / "SKILL.md").write_text("---\nname: hegemon-repair\n---\n", encoding="utf-8")
+    (skill / "scripts" / "localize.py").write_text("def parse_value(raw):\n    return raw\n", encoding="utf-8")
+    (skill / "scripts" / "parse.py").write_text("def parse_value(raw):\n    return 0\n", encoding="utf-8")
+    os.environ["HEGEMON_STATE_DIR"] = str(tmp_path / "state")
+    os.environ["HEGEMON_WORKSPACE"] = str(skill)
+    script = load_script("localize")
+    script.sys.argv = [
+        "localize.py",
+        "--problem",
+        "parse_value raises ValueError on the string nan.",
+        "--workspace",
+        str(repo),
+    ]
+    script.main()
+    payload = json.loads(capsys.readouterr().out)
+    files = [item["file"] for item in payload["files"]]
+    assert files == ["pkg/parse.py"]
+    assert payload["scope"] == str(repo.resolve())
+    assert "scripts/parse.py" not in files
 
 
 def test_localize_ranks_named_symbol_first(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -80,6 +110,7 @@ def test_localize_prefers_traceback_file(tmp_path: Path) -> None:
 def test_localize_does_not_write_into_the_repository(tmp_path: Path) -> None:
     workspace = tmp_path / "repo"
     workspace.mkdir()
+    (workspace / "pyproject.toml").write_text("[project]\nname='demo'\n", encoding="utf-8")
     (workspace / "pkg").mkdir()
     (workspace / "pkg" / "parse.py").write_text("def parse_value(raw):\n    return int(raw)\n", encoding="utf-8")
     before = sorted(path.relative_to(workspace).as_posix() for path in workspace.rglob("*"))
