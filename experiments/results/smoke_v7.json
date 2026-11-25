@@ -1,0 +1,40 @@
+{
+  "experiment_id": "E031_E032",
+  "status": "MEASURED",
+  "candidate": "V7A-12B",
+  "commit": "8d537ad2f7c169255decb55c75ca332eeced5efd",
+  "zip_sha256": "d3d18a886c941fc4d1e95501b3a79471c4c1e34fe515ab8fd9f5fcb735905079",
+  "notebook": "ybedoyab/hegemon-dev-eval",
+  "notebook_version": 7,
+  "model": "gemma-4-12b-it-qat-w4a16-ct",
+  "checked_in_model": "gemma-4-31b-it-qat-w4a16-ct",
+  "hardware": "NvidiaL4 notebook flag, vLLM tp=4 observed on earlier versions of this notebook",
+  "tasks": ["fastapi_15661", "fastapi_13537", "rich_2725", "requests_6629"],
+  "budget": {"max_time_minutes": 5, "max_tool_calls": 24, "max_turns": 40, "timeout_seconds": 120},
+  "sampling_v7a": {"max_output_tokens": 4096, "thinking_budget": 1024, "include_thoughts": false},
+  "solved": {"matched_sample": "1/4", "v7a": "1/4"},
+  "promoted": false,
+  "solve_rate_note": "1/4 on this smoke set is not a leaderboard score and is not a promotion. The matched sample also solved 1/4.",
+  "tasks_detail": {
+    "fastapi_15661": {
+      "sample": {"resolved": false, "patch_chars": 0, "tool_calls": 24, "duration_seconds": 120.7, "termination": "tool_call_budget", "edits": 0, "submit_patch": 0},
+      "v7a": {"resolved": false, "patch_chars": 0, "tool_calls": 20, "duration_seconds": 301.7, "termination": "agent_time_budget", "edits": 0, "submit_patch": 0, "max_prompt_tokens": 16265, "prompt_tokens_sum": 218370, "completion_tokens_sum": 17563, "last_recorded_elapsed_s": 284.8}
+    },
+    "fastapi_13537": {
+      "sample": {"resolved": false, "patch_chars": 0, "tool_calls": 15, "duration_seconds": 255.9, "termination": "context_window_exceeded", "edits": 1, "edit_status": "error", "submit_patch": 0},
+      "v7a": {"resolved": false, "patch_chars": 0, "tool_calls": 13, "duration_seconds": 301.4, "termination": "agent_time_budget_after_unrecorded_generation", "edits": 0, "submit_patch": 0, "max_prompt_tokens": 14840, "prompt_tokens_sum": 124085, "completion_tokens_sum": 7814, "last_recorded_elapsed_s": 121.3}
+    },
+    "requests_6629": {
+      "sample": {"resolved": false, "patch_chars": 1991, "tool_calls": 24, "duration_seconds": 225.9, "exit_code": 1, "termination": "tool_call_budget", "edits": 0, "writes": ["reproduce_issue.py", "reproduce_json_issue.py", "check_reduce.py"], "submit_patch": 0},
+      "v7a": {"resolved": false, "patch_chars": 0, "tool_calls": 24, "duration_seconds": 184.5, "termination": "tool_call_budget_no_library_edit", "edits": 0, "submit_patch": 0, "max_prompt_tokens": 13721, "prompt_tokens_sum": 197368, "completion_tokens_sum": 12148}
+    },
+    "rich_2725": {
+      "sample": {"resolved": true, "patch_chars": 1098, "tool_calls": 6, "duration_seconds": 306.8, "exit_code": 0, "termination": "agent_time_budget_after_edit", "edits": 1, "edit_file": "rich/table.py", "edit_status": "ok", "submit_patch": 0, "first_edit_elapsed_s": 295.8},
+      "v7a": {"resolved": true, "patch_chars": 608, "tool_calls": 14, "duration_seconds": 153.1, "exit_code": 0, "termination": "submit_patch", "edits": 1, "edit_file": "rich/table.py", "edit_status": "ok", "submit_patch": 1, "first_edit_elapsed_s": 116.8, "max_prompt_tokens": 13036, "prompt_tokens_sum": 142508, "completion_tokens_sum": 9943}
+    }
+  },
+  "compaction_events": 0,
+  "cached_tokens": 0,
+  "tool_timeouts": 0,
+  "max_tool_clock_delta_seconds": 1.944
+}

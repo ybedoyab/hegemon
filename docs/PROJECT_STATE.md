@@ -20,7 +20,9 @@ No champion. `configs/champion.json` is not promoted. Versions 5 and 6 stay reje
 
 ## Current candidate
 
-V7A: native harness tools, no attached skill, `max_output_tokens` 4096, `thinking_budget` 1024. Smoke ids are in `experiments/splits/smoke_v7.json`. Measurement is not back yet.
+V7A-12B is measured, not promoted. On four smoke tasks at a matched five-minute budget it solved 1/4 (`rich_2725`). The official sample also solved 1/4, the same task. The other three V7A runs produced no library edit. Details are in `experiments/results/smoke_v7.json`.
+
+The 31B checkpoint is still unmeasured. Compaction did not appear as a trace event.
 
 ## Review
 
