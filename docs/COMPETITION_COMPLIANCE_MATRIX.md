@@ -16,12 +16,15 @@ Date: 2026-11-25. `VERIFIED_HARNESS` means the claim is in the downloaded `HARNE
 | `thinking_level` omitted for vLLM | VERIFIED_HARNESS | Sampling note | omitted |
 | Sandbox network off | VERIFIED_HARNESS | `network_mode=none` | scripts do not open sockets |
 | 4x L4, context 32768 | VERIFIED_HARNESS | Serving section | not runnable on the local 4 GB GPU |
-| Score is fraction of tasks whose hidden tests pass | UNKNOWN | Harness describes pytest verification. The public formula was not copied from the rules body in this pass. | no score claimed |
-| 12-hour total budget | UNKNOWN | Not in the harness file read today | 5 minute per-task cap is a hypothesis |
-| One submission per day | UNKNOWN | Not re-read from the rules body | we do not submit |
-| Private sharing outside the team prohibited | UNKNOWN | Not re-read from the rules body | repo stays private |
+| Score is the percentage of issues whose patch passes validation tests | VERIFIED_PAGE | Evaluation page, retrieved with the Kaggle API on 2026-11-25 | no score claimed |
+| 12-hour total budget | UNKNOWN | Not in the rules pages read on 2026-11-25 | 5 minute per-task cap is a hypothesis |
+| One submission per day | VERIFIED_PAGE | Competition-specific rules section 2.2.a, retrieved 2026-11-25 | the agent does not call the submit API |
+| Private sharing of competition code outside the team | VERIFIED_PAGE | Foundational rules section 5.d and 6.a, retrieved 2026-11-25 | not done |
+| Public sharing of competition code | VERIFIED_PAGE | Foundational rules section 6.b: public sharing must be on the competition forum or notebooks, and is treated as an OSI license that allows commercial use | The GitHub repo is public by the user's choice. Visibility was not changed. No further agent implementation will be pushed while it stays public. Competition data is not in git. |
+| Competition data must not be given to non-participants | VERIFIED_PAGE | Competition-specific rules section 2.4.b.1, retrieved 2026-11-25 | `tasks.jsonl` and snapshots stay outside git |
 | Development `tasks.jsonl` has 129 lines and includes reference patches | VERIFIED_FILE | Line count only. Patch text was not copied into the repo. | absent from git |
 | Cross-task memory during scoring | disabled by policy | No official allowance found | disabled |
 | Online weight updates | disabled by policy | No official allowance found | disabled |
 | Automatic Kaggle submission | VERIFIED_PROHIBITED | User contract | not implemented |
-| Official baseline solve rate | NOT_RUN | No Gemma generation yet | `NOT_RUN` |
+| Official baseline solve rate | MEASURED on one task at the sample's own 1-minute cap: 0/1 | Notebook version 2 | A matched 5-minute run is in notebook version 7, still running |
+| Skill scripts share the container filesystem with `run_command` | VERIFIED_PAGE | "Model Selection, Budget, and Harness Rules" page, retrieved 2026-11-25. The page also says skill time counts against the central budget | Version 5 still ranked the skill directory. V7A does not attach the skill |
