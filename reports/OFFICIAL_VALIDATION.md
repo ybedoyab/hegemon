@@ -3,8 +3,8 @@
 Status: IN_PROGRESS. Not a pass.
 
 Notebook: https://www.kaggle.com/code/ybedoyab/hegemon-dev-eval
-Version: 1
-Status at launch: KernelWorkerStatus.RUNNING
+Version: 2 (version 1 was replaced before model load; its evaluator call used a wrong keyword)
+Status at second launch: KernelWorkerStatus.QUEUED
 Accelerator requested: NvidiaL4 (the official starter metadata uses this single L4 shape, not four L4s)
 Internet: disabled
 Model for this run: gemma-4-12b-it-qat-w4a16-ct, rewritten inside the notebook only
