@@ -4,7 +4,7 @@ Scratch state lives in `/tmp/hegemon`. A file created inside the repository is p
 
 Emit exactly one tool call per turn.
 
-First call `run_skill_script` with `skill_name` `hegemon-repair` and `file_path` `scripts/localize.py`. Pass `problem` as the issue title, exception names, file paths, and the failing behavior. Then follow `next_action`.
+First call `run_skill_script` with `skill_name` `hegemon-repair` and `file_path` `scripts/localize.py`. Copy exception names, file paths, and the failing behavior from the issue into `problem`. A short title is not a localization query. If that call returns no files, call `search_similar_code` or `get_code_neighbors` with a symbol copied from the issue. Do not search unrelated scripts or workflows.
 
 - `read_top_file`: `read_file` the next unread ranked file, using the returned `start_line` and `end_line`, at most 80 lines. Then `state_update.py` with `event=read_done`.
 - `graph_expand`: one `get_code_neighbors` or `search_similar_code` using a symbol name from the localize result, then read the new file.

@@ -5,7 +5,8 @@ Date: 2026-11-25. One development task. Not a leaderboard score and not a projec
 | Agent | Model in the session | Task | Resolved | Tool calls | Duration | Patch chars | Failure |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Official sample | gemma-4-12b-it-qat-w4a16-ct | fastapi_15661 | no | 10 | 67.2s | 0 | 1-minute sample budget timed out before `submit_patch` |
-| HEGEMON commit before the kebab-case rename | same session | fastapi_15661 | no | 0 | 1.6s | 0 | skill name `hegemon_repair` rejected by the compiler |
+| HEGEMON before the kebab-case rename | same version-2 session | fastapi_15661 | no | 0 | 1.6s | 0 | skill name `hegemon_repair` rejected by the compiler |
+| HEGEMON after the rename, version 3 | gemma-4-12b-it-qat-w4a16-ct, tp=4 | fastapi_15661 | no | 11 | 307.2s | 0 | 5-minute budget timed out. Localization got a 28-character paraphrase and returned no files. No edit. |
 
 The checked-in submission model is still `gemma-4-31b-it-qat-w4a16-ct`. This session overrode the copy to 12B. vLLM reported `tp=4`.
 

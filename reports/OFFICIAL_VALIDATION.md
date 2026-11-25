@@ -30,8 +30,14 @@ Task `fastapi_15661`, repo `fastapi/fastapi`, model `gemma-4-12b-it-qat-w4a16-ct
 
 The harness logged `agent timed out` and `completed without explicit submit_patch call and no working tree modifications`. The sample `eval_config.yaml` caps the task at 1 minute and 10 tool calls. This is one timed-out task, not a solve rate.
 
-## HEGEMON on that task
+## HEGEMON on that task in version 2
 
 `resolved=false, exit_code=-1, patch_chars=0, tool_calls=0, duration_seconds=1.60`
 
 The failure is the skill-name rejection above. No repair was attempted.
+
+## Version 3
+
+`validate_directory` again printed `HEGEMON_OFFICIAL_VALIDATE_OK`. The compiler accepted `hegemon-repair`. vLLM started with `tp=4`.
+
+HEGEMON on `fastapi_15661`: `resolved=false`, 11 tool calls, 307.2 seconds, 0 patch characters. The harness timed the agent out. See `reports/FAILURE_TAXONOMY.md`.
