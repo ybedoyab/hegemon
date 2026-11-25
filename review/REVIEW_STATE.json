@@ -1,7 +1,7 @@
 {
-  "state": "IMPLEMENTING",
+  "state": "REVIEW_READY",
   "reviewer_decision": null,
-  "reviewed_sha": null,
+  "reviewed_sha": "11352bb13f2651249c5d04172e4c3ad3a69a59eb",
   "approval": null,
-  "note": "No ChatGPT reply has been received. Do not treat this file as approval."
+  "note": "Handoff prepared. No ChatGPT reply has been received. This is not an approval."
 }
