@@ -1,20 +1,17 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/google/adk-python/refs/heads/main/src/google/adk/agents/config_schemas/AgentConfig.json
-agent_class: LlmAgent
 name: hegemon
 model: gemma-4-31b-it-qat-w4a16-ct
-description: Budget-aware software repair agent that localizes from evidence, edits a minimal patch, and submits only after a diff check.
+description: Adaptive software repair agent. Chooses the next action from evidence and submits one patch.
 instruction: !include prompts/system.md
 generate_content_config: !include configs/sampling.yaml
+skills:
+  - skills/hegemon_repair
 tools:
-  - name: run_command
-  - name: read_file
-  - name: edit_file
-  - name: write_file
-  - name: get_status
-  - name: submit_patch
-  - name: get_code_neighbors
-  - name: search_similar_code
-  - name: get_code_subgraph
-  - name: load_skill
-  - name: load_skill_resource
-  - name: run_skill_script
+  - run_command
+  - read_file
+  - edit_file
+  - write_file
+  - get_status
+  - submit_patch
+  - get_code_neighbors
+  - search_similar_code
+  - get_code_subgraph

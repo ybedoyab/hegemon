@@ -1,40 +1,43 @@
 # Harness API reference
 
-This is a working note, not a copy of `HARNESS_README.md`. Confirm every signature against the dataset file before treating a mismatch as a bug in our agent.
+Source: `HARNESS_README.md` downloaded 2026-11-25 with the Kaggle CLI. This note records the signatures our prompt depends on. It is not a copy of the official file.
 
-## Tools, as described by public digests
+## Harness tools
 
-| Tool | Arguments described | Budget | Behavior we rely on |
+| Tool | Arguments | Counts as a tool call | Limit we rely on |
 | --- | --- | --- | --- |
-| `run_command` | `command` | yes | Shell in the workspace. We use it for `/tmp/hegemon/repro.py` only. Output is truncated in the digest (about 5000 chars). |
-| `read_file` | `filepath`, `start_line`, `end_line` | yes | 1-indexed. Digest says 150 lines and 10000 chars. Prompt asks for <= 80. |
-| `edit_file` | `filepath`, `old_string`, `new_string`, `allow_multiple=false` | yes | Exact match, then flexible match. Zero or many matches error. |
-| `write_file` | `filepath`, `content` | yes | Creates directories. Avoid for scratch. |
-| `get_status` | none | no, per digest | Budget and patch status. |
-| `submit_patch` | none | no | Ends the turn. Digest: `git add -N . && git diff HEAD`. |
-| `get_code_neighbors` | `node`, `edge_type=None`, `max_neighbors=50` | yes | Symbol resolution. Graph files may be absent. |
-| `search_similar_code` | `query`, `k=10` | yes | Digest says `query` is a symbol name, not a sentence. |
-| `get_code_subgraph` | `nodes` | yes | Induced subgraph. |
-| `load_skill` | `name` | unknown | Upstream ADK loads `SKILL.md`. |
-| `load_skill_resource` | `skill_name`, `path` | unknown | Reads a skill file. |
-| `run_skill_script` | `skill_name`, `script_path`, `args` object | yes, time counts | Upstream ADK passes args as `--key value` and runs the script from a temp copy of the skill. Scripts must use absolute workspace paths. |
+| `run_command` | `command` | yes | bash in `/workspace`. stdout and stderr truncated at 5,000 characters. Timeout is the command cap, at least 5 seconds, and does not end the session by itself. |
+| `read_file` | `filepath`, `start_line`, `end_line` | yes | 1-indexed. Cap 150 lines and 10,000 characters. `..` is rejected. |
+| `edit_file` | `filepath`, `old_string`, `new_string`, `allow_multiple=false` | yes | Exact match, then trimmed-line match, then flexible spacing. Empty file, empty `old_string`, or a non-unique match returns `FileEditError`. |
+| `write_file` | `filepath`, `content` | yes | Creates parent directories. A file under `/workspace` enters `git diff`. |
+| `get_status` | none | no | Remaining calls, time, turns, patch size. |
+| `submit_patch` | none | no | `git add -N .` then `git diff --binary` against `_swegemma_baseline` or `HEAD`. Ends the loop after the current turn. |
+| `get_code_neighbors` | `node`, `edge_type`, `max_neighbors=50` | yes | Symbol or suffix. Output cap 5,000 characters. |
+| `search_similar_code` | `query`, `k=10` | yes | `query` is a symbol name. Offline lexical fallback. Not a sentence embedding. |
+| `get_code_subgraph` | `nodes` | yes | Induced subgraph. Output cap 5,000 characters. |
 
-## Skill scripts we ship
+## Skill tools
 
-- `hegemon_repair/scripts/localize.py`
-- `hegemon_repair/scripts/state_update.py`
-- `hegemon_repair/scripts/summarize_pytest.py`
-- `hegemon_repair/scripts/diff_guard.py`
+Present when `agent.yaml` has `skills:`. The harness coerces a one-element list to a string for `skill_name` and `file_path` on `load_skill`, `load_skill_resource`, and `run_skill_script`.
 
-`common.py` is imported by those scripts.
+Our scripts still parse `--key value` from argv. A failed call returns `{"status":"error","error_type":...,"error":...}` instead of aborting the task.
 
-## Session behavior we plan for, still unverified here
+## Patch and scratch
 
-- If the agent never calls `submit_patch`, the digest says the harness still grades `git diff HEAD`.
-- Test files named by the official test patch are reset, so editing tests is useless.
-- Scratch inside the workspace is dangerous because of `git add -N`.
-- Context compaction may not save a single long task. The digest argues for staying under roughly 20 large tool results.
+`submit_patch` and the fallback diff both stage untracked files under `/workspace`. Reproduction scripts go in `/tmp/hegemon`. Do not edit `pytest.ini` or `conftest.py`. The harness writes those before the agent starts.
 
-## Not confirmed
+## Budgets in this submission
 
-Exact `eval_config.yaml` schema, whether `load_skill` is required before `run_skill_script`, whether `/tmp` persists across tasks, and whether the harness passes skill args the way upstream ADK does.
+```yaml
+evaluation:
+  timeout_seconds: 120
+  max_tool_calls: 24
+  max_time_minutes: 5
+  max_turns: 40
+```
+
+`timeout_seconds` is the command timeout. These numbers are a budget choice. They are valid keys. They are not a measured optimum.
+
+## Sampling
+
+`thinking_level` is omitted. `thinking_budget` is 4096 and `max_output_tokens` is 16384, matching the harness note about truncated tool calls. `include_thoughts` is false so thought text is not kept in later turns. The official sample sets it true.

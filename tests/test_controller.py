@@ -9,6 +9,16 @@ from hegemon.localization.rank import rank_files
 def test_controller_matches_skill_policy() -> None:
     assert decide_next_action({}, "read_done", "unknown", False) == "edit"
     assert decide_next_action({"attempts": 1, "has_patch": False}, "failure", "assertion", True) == "graph_expand"
+    ambiguous = {
+        "reads": 1,
+        "localization": {
+            "confidence": 0.2,
+            "files": [{"file": "a.py"}, {"file": "b.py"}],
+        },
+    }
+    assert decide_next_action(ambiguous, "read_done", "unknown", False) == "read_top_file"
+    ambiguous["reads"] = 2
+    assert decide_next_action(ambiguous, "read_done", "unknown", False) == "edit"
 
 
 def test_rank_wrapper_finds_parse_value() -> None:

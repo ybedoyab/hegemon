@@ -1,58 +1,70 @@
 # Competition contract
 
-Read date: 2026-11-25.
+Read date: 2026-11-25. Sources opened in this session:
 
-The live pages `overview`, `rules`, and the competitions API did not return usable official text (SPA error and HTTP 401). Nothing below that depends on those pages is marked `VERIFIED_*`. Working assumptions used in `submission/` are the intersection of the secondary sources listed in `docs/OFFICIAL_SOURCES.md`.
+- Kaggle rules page, signed-in session: banner "You have accepted the rules for this competition."
+- `HARNESS_README.md` downloaded with the official CLI to `D:\kaggle-data\gemma-4-developer-agent\` (55,940 bytes, file dated 2026-10-13). Not committed.
+- Official `sample_submission/agent.yaml`, `eval_config.yaml`, and `configs/sampling.yaml` from the same dataset.
+- `tasks.jsonl`: 129 lines. Contains reference patches. Not committed and not given to the solver.
 
 ## Scoring
 
-Secondary sources agree on a SWE-bench style score: a patch is applied to a fresh tree, the task's tests run, and the score is the fraction of tasks that pass. Public and private halves of about 120 hidden tasks. Private rank decides prizes. Ties go to the earlier submission.
-
-This project has not run that grader.
+The downloaded harness describes Phase 2 as applying the agent patch and running pytest. A public leaderboard score has not been produced. Do not treat a unit-test pass as a solve rate.
 
 ## Time and hardware
 
-Secondary sources: 12 hours for all tasks, including sandbox setup and vLLM startup, excluding patch validation. One submission per day. Hardware described as 4x L4 (96 GB), internet off, `max_model_len` 32768.
+Verified from `HARNESS_README.md`:
 
-Per-task arithmetic used here: `python -m hegemon budget` returns 305 seconds after a 20-minute reserve and 45 seconds of setup on 120 tasks. `submission/eval_config.yaml` asks for 4 minutes, which is inside that envelope. Both the task count and the YAML keys are `UNKNOWN` against the official file.
+- Evaluation serving: 4x NVIDIA L4, 96 GB, vLLM, `tensor_parallel_size=4`, `max_model_len=32768`, tool and reasoning parsers `gemma4`.
+- Sandbox network mode `none`.
+- Unpacked submission under 3 GiB (3,221,225,472 bytes). No symlinks. No `..`.
+- Per-task keys live under `evaluation:` in `eval_config.yaml`: `timeout_seconds` (command timeout), `max_tool_calls`, `max_time_minutes`, `max_turns`.
+- Defaults in `inference.py` when unset: 60 minutes, 100 tool calls, 500 turns, 300 second command timeout. The sample submission uses 1 minute, 10 calls, 50 turns, 60 second command timeout.
+- Agent time starts after container setup. `get_status` and `submit_patch` do not count as tool calls. `submit_patch` ends the loop after the current turn.
+- Context compaction is configured (`token_threshold` 14336, interval 15). This replaces the earlier assumption that compaction does not run.
+
+Not in the harness file: the 12-hour wall clock and the one-submission-per-day rule. Those remain timeline claims from the competition pages, not harness constants. `submission/eval_config.yaml` uses 5 minutes, 24 tool calls, 40 turns, and a 120 second command timeout so a full task set cannot inherit the 60-minute default.
 
 ## Models
 
-| ID | Small-model bonus | Status |
-| --- | --- | --- |
-| `gemma-4-31b-it-qat-w4a16-ct` | no | Working default. Every secondary source names it. |
-| `gemma-4-12b-it-qat-w4a16-ct` | no | Named by October 2026 sources. September digest said 31B only. `UNKNOWN`. |
-| `gemma-4-e4b-it-qat-w4a16-ct` | yes, if sources are right | `UNKNOWN` |
-| `gemma-4-e2b-it-qat-w4a16-ct` | yes, if sources are right | `UNKNOWN` |
+Verified allowed base checkpoints, exactly one per submission:
 
-All agents in one submission must share one base model. Different LoRA adapters per agent are described as allowed. This zip ships no adapter.
+| ID | Notes |
+| --- | --- |
+| `gemma-4-31b-it-qat-w4a16-ct` | Default. This submission. |
+| `gemma-4-12b-it-qat-w4a16-ct` | Allowed. Not selected. |
+| `gemma-4-e4b-it-qat-w4a16-ct` | Allowed. Small-model prize depends on the rules page, not this file. |
+| `gemma-4-e2b-it-qat-w4a16-ct` | Allowed. Same caveat. |
+
+Unquantized Gemma variants are documented as local-CLI only. No LoRA is shipped. `thinking_level` is omitted because the harness says the vLLM OpenAI endpoint should not receive it.
 
 ## Submission shape
 
-`submission.zip` at `/kaggle/working/submission.zip`, `agent.yaml` at the zip root, under 3 GiB, no symlinks, no `..`. Optional `configs/`, `prompts/`, `skills/`, `sub_agents/`, `adapters/`, `eval_config.yaml`.
+Official sample `agent.yaml` uses bare tool names, `instruction: !include`, and `generate_content_config: !include`. Skills are a list of relative directories. This submission matches that shape and adds `skills: [skills/hegemon_repair]`. It does not declare `load_skill` as a harness tool. The harness adds skill tools when `skills:` is set.
 
-Our packer enforces that shape for the local tree. It is not the official notebook validator.
+`agent_class: LlmAgent` is the documented default and is omitted, matching the sample.
+
+## Tools
+
+Nine harness tools: `run_command`, `read_file`, `edit_file`, `write_file`, `get_status`, `submit_patch`, `get_code_neighbors`, `search_similar_code`, `get_code_subgraph`. Signatures are in `docs/HARNESS_API_REFERENCE.md`.
+
+Skill script argument coerced by the harness is `file_path`, together with `skill_name`.
 
 ## Data
 
-Development set described as 129 tasks from fastapi, rich, requests, and httpx, about 22.42 GB, Apache-2.0, with snapshots, graphs, embeddings, wheels, and a sample submission. Not downloaded. Do not redistribute it.
+129 development tasks downloaded. Snapshots, graphs, embeddings, wheels, and the full 22 GB set are not fully downloaded. Reference `patch` fields stay outside git and outside the solving prompt.
 
-Hidden tasks are described as coming from private repositories, so memorizing the four public libraries is a weak strategy.
+## Still disabled
 
-## Disabled until verified
-
-- Cross-task memory
+- Cross-task memory during official evaluation
 - Online weight updates
-- Sub-agents
-- LoRA
-- Any eval_config key that `HARNESS_README.md` does not list
-- Network access inside the sandbox
-- A second base model in the same zip
+- A second base model
+- Network inside the sandbox
+- Automatic Kaggle submission
 
-## Deadlines from secondary sources
+## Deadlines seen on the competition timeline
 
 - Entry and team merger: 2026-11-25 23:59 UTC
 - Final submission: 2026-12-02 23:59 UTC
-- Paper track: closed 2026-11-12
 
-Confirm these on the Kaggle timeline before relying on them. The entry gate is today relative to this session.
+Rules acceptance for this account is already recorded. See `docs/REGISTRATION_STATUS.md`.

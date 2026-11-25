@@ -70,6 +70,19 @@ def test_experience_compiler_drops_task_identity() -> None:
     assert any(item["category"] == "env_error" for item in lessons)
 
 
+def test_official_submission_shape() -> None:
+    agent = (SUBMISSION / "agent.yaml").read_text(encoding="utf-8")
+    eval_config = (SUBMISSION / "eval_config.yaml").read_text(encoding="utf-8")
+    sampling = (SUBMISSION / "configs" / "sampling.yaml").read_text(encoding="utf-8")
+    assert "skills:" in agent
+    assert "skills/hegemon_repair" in agent
+    assert "- name:" not in agent
+    assert "evaluation:" in eval_config
+    assert "max_tool_calls:" in eval_config
+    assert "thinking_level" not in sampling
+    assert "thinking_budget:" in sampling
+
+
 def test_submission_tree_and_zip(tmp_path: Path) -> None:
     write_system_prompt()
     errors = validate_tree(SUBMISSION)

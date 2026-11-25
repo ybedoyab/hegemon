@@ -1,20 +1,18 @@
 ## Decision policy
 
-Keep all scratch files in `/tmp/hegemon`. A file written inside the repository becomes part of the patch.
+Scratch state lives in `/tmp/hegemon`. A file created inside the repository is part of the submitted diff. Put reproduction scripts in `/tmp/hegemon`, never in `/workspace`.
 
-Start with `run_skill_script` on skill `hegemon_repair`, script `scripts/localize.py`. Pass `problem`: the issue title, exception names, file paths, and the specific failing behavior. Omit long logs.
+Emit exactly one tool call per turn.
 
-Then obey `next_action`:
+First call `run_skill_script` with `skill_name` `hegemon_repair` and `file_path` `scripts/localize.py`. Pass `problem` as the issue title, exception names, file paths, and the failing behavior. Then follow `next_action`.
 
-- `read_top_file`: `read_file` the first ranked file. Use the returned `start_line` and `end_line`. Do not read more than 80 lines. Then `state_update.py` with `event=read_done`.
-- `graph_expand`: `get_code_neighbors` or `search_similar_code` once, using a symbol name from the localize result, not a sentence. Then read the new file.
-- `edit`: `edit_file` once. `old_string` must be copied from the file you just read. Change the smallest span that fixes the cause. Then `state_update.py` with `event=edit_done` and `fingerprint` set to a short hash or unique snippet of that edit.
-- `reproduce`: write `/tmp/hegemon/repro.py` with `run_command`. Expectations come only from the issue and the behavior you observed. Then `summarize_pytest.py` with that target.
-- `rerun`: `summarize_pytest.py` on one related test file from the localize result, or on `/tmp/hegemon/repro.py`. Do not run the whole suite.
-- `revise`: read `category`. If it is `env_error`, do not treat the failure as a wrong patch. If it is `assertion`, call `state_update.py` with `event=failure` and the tail. If `repeated` is true, choose a different file or a different hypothesis. Do not apply the same edit again.
-- `submit`: `diff_guard.py`. If it returns `submit`, call `submit_patch`. If it returns `revise`, remove test-file edits and unrelated files first.
-- `stop`: call `submit_patch` only when `diff_guard.py` says the diff is non-empty and does not touch tests. Otherwise make no further edits.
+- `read_top_file`: `read_file` the next unread ranked file, using the returned `start_line` and `end_line`, at most 80 lines. Then `state_update.py` with `event=read_done`.
+- `graph_expand`: one `get_code_neighbors` or `search_similar_code` using a symbol name from the localize result, then read the new file.
+- `edit`: one `edit_file`. Copy `old_string` from a file you read. Change the smallest span that can fix the cause. Then `state_update.py` with `event=edit_done` and a short `fingerprint`.
+- `reproduce`: write `/tmp/hegemon/repro.py` with `run_command` from behavior named in the issue, then summarize that file.
+- `rerun`: `summarize_pytest.py` on one related test file or `/tmp/hegemon/repro.py`.
+- `revise`: if `category` is `env_error`, the patch is not disproven. If it is `assertion`, call `state_update.py` with `event=failure` and the tail. A repeated fingerprint changes strategy. Edit the same file again when the failure names a new line.
+- `submit`: `diff_guard.py`. Call `submit_patch` only when it returns `submit`.
+- `stop`: call `submit_patch` only when `diff_guard.py` accepts a non-empty diff.
 
-A simple defect is localize, one read, one edit, one targeted test, diff_guard, submit. Do not explore the rest of the repository when confidence is high.
-
-When two files have similar scores, inspect the second file before editing. When the issue names a compatibility or serialization boundary, read the function that crosses that boundary, not only the line in the traceback.
+When confidence is high, read one window and edit. When two files score similarly, read the second before editing. When a targeted test fails after the edit, use the failure text before the next edit. When `get_status` shows few calls left, or the same fingerprint has failed twice, submit the best diff the guard accepts.

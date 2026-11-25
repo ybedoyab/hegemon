@@ -4,7 +4,7 @@ Updated: 2026-11-25
 
 ## Phase
 
-`IMPLEMENTING`. Foundation is executable. Official baseline is `NOT_RUN`.
+`IMPLEMENTING`. Official harness file and sample submission are downloaded. Rules are accepted. Gemma inference is `NOT_RUN`. Official baseline is `NOT_RUN`.
 
 ## Machine
 
@@ -12,7 +12,7 @@ Updated: 2026-11-25
 - NVIDIA GeForce RTX 3050 Ti Laptop, 4096 MiB, driver 591.44, compute capability 8.6
 - Python 3.12.3 and 3.11.9, Git 2.41, GitHub CLI logged in as `ybedoyab`, uv 0.12.5
 - Docker client 29.8.0 installed; the daemon was not running. WSL2 Ubuntu is installed.
-- Kaggle CLI is not installed. `%USERPROFILE%\.kaggle\kaggle.json` is absent.
+- Kaggle CLI 2.2.5 is installed in `D:\cache\hegemon-venv` and logged in as `ybedoyab` through browser OAuth. Credentials are outside the repository.
 - Hugging Face cache contains only `sentence-transformers/all-MiniLM-L6-v2`. No Gemma checkpoint.
 - C: had about 1.1 GB free. D: had about 142 GB free. Keep caches on D:.
 
@@ -43,4 +43,4 @@ Updated: 2026-11-25
 
 ## Immediate blocker
 
-The official dataset and `HARNESS_README.md` are behind a Kaggle rules acceptance. Without them, tool schemas and `eval_config.yaml` field names stay corroborated, not verified. The entry deadline is 2026-11-25 23:59 UTC.
+No permitted Gemma checkpoint has been executed. The local GPU has 4 GB and cannot load the 31B checkpoint. The submission schema now matches the downloaded harness. A solve rate does not exist yet.

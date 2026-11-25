@@ -27,7 +27,15 @@ def classify(detail: str, category: str) -> str:
 
 def decide(state: dict, event: str, category: str, repeated: bool) -> str:
     attempts = int(state.get("attempts") or 0)
+    localization = state.get("localization") or {}
+    confidence = float(localization.get("confidence") or 0)
+    files = localization.get("files") or []
+    reads = int(state.get("reads") or 0)
     if event == "read_done":
+        # Ambiguous localization: read one more ranked file before editing.
+        # A later read, or a single candidate, proceeds to the edit.
+        if len(files) > 1 and confidence < 0.5 and reads < 2:
+            return "read_top_file"
         return "edit"
     if event == "edit_done":
         return "rerun"
@@ -80,6 +88,8 @@ def main() -> None:
         state["has_patch"] = True
     if event == "edit_done":
         state["has_patch"] = True
+    if event == "read_done":
+        state["reads"] = int(state.get("reads") or 0) + 1
     state["rejected_fingerprints"] = rejected[-20:]
     state["last_category"] = category
     state["last_event"] = event

@@ -1,7 +1,7 @@
 {
-  "state": "AWAITING_REVIEW",
-  "reviewer_decision": null,
-  "reviewed_sha": "11352bb13f2651249c5d04172e4c3ad3a69a59eb",
+  "state": "REQUEST_CHANGES",
+  "reviewer_decision": "REQUEST_CHANGES",
+  "reviewed_sha": "dde9c44b9f87d6761d694977257d730c6a075ad5",
   "approval": null,
-  "note": "Handoff prepared. No ChatGPT reply has been received. This is not an approval."
+  "note": "External review received for dde9c44. Not an approval. Iteration 2 is applying it."
 }
